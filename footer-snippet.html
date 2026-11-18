@@ -1,0 +1,67 @@
+<!-- source-chat-footer:start -->
+<!-- Added by source-chat-footer. This block holds a path on this machine; remove it before the page is shared. -->
+<footer class="source-chat" data-source-chat="__SESSION_ID__" data-link-confidence="__CONFIDENCE__">
+  <div class="source-chat__row">
+    <span class="source-chat__label">__LABEL__</span>
+    <a href="__TRACE_URL__">__TRACE_PATH__</a>
+  </div>
+  <div class="source-chat__row">
+    <span class="source-chat__label">Resume</span>
+    <code>claude --resume __SESSION_ID__</code>
+    <button type="button" class="source-chat__copy" data-copy="claude --resume __SESSION_ID__">copy</button>
+  </div>
+  <div class="source-chat__row source-chat__meta">
+    <span>session __SESSION_ID__</span><span>generated __DATE__</span>
+  </div>
+</footer>
+<style>
+  .source-chat {
+    margin: 4rem 0 0;
+    padding: 1rem 0 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+    font: 400 0.75rem/1.7 ui-monospace, SFMono-Regular, Menlo, monospace;
+    opacity: 0.6;
+  }
+  .source-chat:hover { opacity: 1; }
+  .source-chat__row { display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; align-items: baseline; }
+  .source-chat__label { min-width: 6.5em; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.68rem; opacity: 0.7; }
+  .source-chat a { color: inherit; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); word-break: break-all; }
+  .source-chat code { background: color-mix(in srgb, currentColor 8%, transparent); padding: 0.15em 0.45em; border-radius: 3px; }
+  .source-chat__copy {
+    font: inherit; cursor: pointer; padding: 0.15em 0.6em; border-radius: 3px;
+    color: inherit; background: transparent;
+    border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+  }
+  .source-chat__copy:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+  .source-chat__meta { margin-top: 0.35rem; opacity: 0.65; }
+</style>
+<script>
+  document.querySelectorAll('.source-chat__copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var text = btn.dataset.copy;
+      var done = function () {
+        btn.textContent = 'copied';
+        setTimeout(function () { btn.textContent = 'copy'; }, 1200);
+      };
+      // The clipboard API only works in a secure context, so otherwise
+      // copy through a hidden text area, and if that fails too, ask the
+      // reader to select the command by hand.
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else {
+        fallback();
+      }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) { btn.textContent = 'select the command'; }
+        document.body.removeChild(ta);
+      }
+    });
+  });
+</script>
+<!-- source-chat-footer:end -->
